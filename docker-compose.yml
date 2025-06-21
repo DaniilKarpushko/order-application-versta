@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  order-api:
+    build:
+      context: ./server
+      dockerfile: OrderApplication.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - order-db
+    environment:
+      - ASPNETCORE_URLS=http://+:8080
+    networks:
+      - internal-net
+
+  order-db:
+    image: postgres:latest
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: orders
+    networks:
+      - internal-net
+    
+  order-client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - order-api
+      - order-db
+    environment:
+      - VITE_API_BASE_URL=http://order-api:8080/api
+    networks:
+      - internal-net
+    command: npm run dev
+
+networks:
+  internal-net:
