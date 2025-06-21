@@ -14,15 +14,28 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      Solution_Name: server/OrderApplication.sln
+
+
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install .NET SDK
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
     - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+    
+    - name: Build solution
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      
+    - name: Run unit tests
+      run: dotnet test $env:Solution_Name --configuration $env:Configuration
+      
