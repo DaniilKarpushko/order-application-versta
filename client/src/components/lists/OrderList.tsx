@@ -44,6 +44,11 @@ const OrderList = () => {
         setPage(prevPage);
     };
 
+    const handleOnReload = async () => {
+        const orders = await fetchOrders(page);
+        setOrders(orders);
+    }
+
     useEffect(() => {
         const load = async () => {
             const initialOrders = await fetchOrders(0);
@@ -68,7 +73,12 @@ const OrderList = () => {
                 >
                     Prev
                 </button>
-
+                <button
+                    onClick={handleOnReload}
+                    className="px-4 py-2 mx-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                    Reload
+                </button>
                 <button
                     onClick={handleOnLoadNext}
                     className="px-4 py-2 mx-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
