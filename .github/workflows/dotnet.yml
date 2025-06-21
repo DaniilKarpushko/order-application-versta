@@ -31,11 +31,11 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Restore dependencies
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name /t:Restore
     
     - name: Build solution
-      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name
       
     - name: Run unit tests
-      run: dotnet test $env:Solution_Name --configuration $env:Configuration
+      run: dotnet test $env:Solution_Name
       
